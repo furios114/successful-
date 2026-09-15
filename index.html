@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Successful Club — одежда нового поколения</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="home">
+
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo"><img src="images/logo.png" alt="Successful Club"></a>
+    <button class="burger" id="burger">☰</button>
+    <nav class="nav" id="nav">
+      <a href="index.html" class="active">Главная</a>
+      <a href="catalog.html">Каталог</a>
+      <a href="favorites.html" class="icon-link">Избранное <span class="badge" data-fav-count>0</span></a>
+      <a href="cart.html" class="icon-link">Корзина <span class="badge" data-cart-count>0</span></a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1>SUCCESSFUL <span>CLUB</span></h1>
+    <p>Одежда нового поколения. Для тех, кто идёт до конца.</p>
+    <a href="catalog.html" class="btn btn-primary btn-lg" style="max-width:280px;margin:0 auto">Смотреть каталог</a>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title">Хиты</h2>
+      <a href="catalog.html" class="btn btn-outline">Все товары →</a>
+    </div>
+    <div class="grid" id="hits-grid"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div>© 2025 Successful Club</div>
+    <div>Заказы: <a href="https://t.me/Dr1lly52" target="_blank">@Dr1lly52</a></div>
+  </div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/app.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const grid = document.getElementById("hits-grid");
+    renderGrid(grid, products.slice(0, 4));
+  });
+  document.getElementById("burger")?.addEventListener("click", () => {
+    document.getElementById("nav").classList.toggle("open");
+  });
+</script>
+</body>
+</html>
