@@ -28,14 +28,12 @@ function addToCart(id, size, qty = 1) {
   else cart.push({ id, name: p.name, price: p.price, image: p.images[0], size, qty });
   store.cart = cart;
 }
-
 function removeFromCart(index) {
   const cart = store.cart;
   cart.splice(index, 1);
   store.cart = cart;
   renderCart();
 }
-
 function changeQty(index, delta) {
   const cart = store.cart;
   cart[index].qty += delta;
@@ -43,10 +41,7 @@ function changeQty(index, delta) {
   store.cart = cart;
   renderCart();
 }
-
-function cartTotal() {
-  return store.cart.reduce((s, i) => s + i.price * i.qty, 0);
-}
+function cartTotal() { return store.cart.reduce((s, i) => s + i.price * i.qty, 0); }
 
 /* ====== ИЗБРАННОЕ ====== */
 function toggleFav(id) {
@@ -59,7 +54,7 @@ function toggleFav(id) {
 }
 function isFav(id) { return store.favs.includes(id); }
 
-/* ====== TELEGRAM-ЗАКАЗ ====== */
+/* ====== TELEGRAM ====== */
 function orderViaTelegram(text) {
   navigator.clipboard?.writeText(text).catch(() => {});
   window.open(`https://t.me/${TG_USERNAME}?text=${encodeURIComponent(text)}`, "_blank");
@@ -84,7 +79,7 @@ function productCard(p) {
     </article>`;
 }
 
-/* ====== СОБЫТИЯ (глобальные) ====== */
+/* ====== ГЛОБАЛЬНЫЕ СОБЫТИЯ ====== */
 document.addEventListener("click", e => {
   const favBtn = e.target.closest("[data-fav]");
   if (favBtn) {
@@ -93,33 +88,20 @@ document.addEventListener("click", e => {
     const active = toggleFav(id);
     favBtn.classList.toggle("active", active);
     if (document.body.dataset.page === "favorites") renderFavorites();
-    if (document.body.dataset.page === "product") {
-      const p = products.find(x => x.id === id);
-      if (p) renderProduct();
-    }
     return;
   }
-
   const quick = e.target.closest("[data-quick-add]");
   if (quick) {
     const id = +quick.dataset.quickAdd;
     const p = products.find(x => x.id === id);
-    if (p.sizes.length > 1) {
-      location.href = `product.html?id=${id}`;
-    } else {
-      addToCart(id, p.sizes[0]);
-      quick.textContent = "Добавлено ✓";
-      setTimeout(() => quick.textContent = "Купить", 1200);
-    }
+    if (p.sizes.length > 1) location.href = `product.html?id=${id}`;
+    else { addToCart(id, p.sizes[0]); quick.textContent = "Добавлено ✓"; setTimeout(() => quick.textContent = "Купить", 1200); }
   }
 });
 
-/* ====== ОБЩИЕ РЕНДЕРЫ ====== */
+/* ====== РЕНДЕРЫ ====== */
 function renderGrid(container, list) {
-  if (!list.length) {
-    container.innerHTML = `<p class="empty">Ничего не найдено</p>`;
-    return;
-  }
+  if (!list.length) { container.innerHTML = `<p class="empty">Ничего не найдено</p>`; return; }
   container.innerHTML = list.map(productCard).join("");
 }
 
@@ -132,24 +114,21 @@ function renderFavorites() {
   if (empty) empty.style.display = list.length ? "none" : "block";
 }
 
-/* ====== INIT ====== */
 document.addEventListener("DOMContentLoaded", () => {
   updateBadges();
   const page = document.body.dataset.page;
-
   if (page === "catalog") initCatalog();
   if (page === "favorites") renderFavorites();
   if (page === "cart") renderCart();
   if (page === "product") renderProduct();
 });
 
-/* ====== КАТАЛОГ + ПОИСК ====== */
+/* ====== КАТАЛОГ ====== */
 function initCatalog() {
   const grid = $("#catalog-grid");
   const search = $("#search");
   const sort = $("#sort");
   const cats = $$("[data-cat]");
-
   let activeCat = "all";
   let query = "";
 
@@ -158,10 +137,7 @@ function initCatalog() {
     if (activeCat !== "all") list = list.filter(p => p.category === activeCat);
     if (query) {
       const q = query.toLowerCase().trim();
-      list = list.filter(p =>
-        p.name.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q)
-      );
+      list = list.filter(p => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
     }
     if (sort.value === "asc") list.sort((a, b) => a.price - b.price);
     if (sort.value === "desc") list.sort((a, b) => b.price - a.price);
@@ -179,17 +155,15 @@ function initCatalog() {
     activeCat = btn.dataset.cat;
     apply();
   }));
-
   apply();
 }
 
-/* ====== КАРТОЧКА ТОВАРА ====== */
+/* ====== ТОВАР ====== */
 function renderProduct() {
   const id = +new URLSearchParams(location.search).get("id");
   const p = products.find(x => x.id === id);
   const wrap = $("#product-wrap");
   if (!p) { wrap.innerHTML = "<p>Товар не найден</p>"; return; }
-
   const fav = isFav(p.id);
 
   wrap.innerHTML = `
@@ -226,27 +200,18 @@ function renderProduct() {
     b.classList.add("active");
     selectedSize = b.dataset.size;
   }));
-
   $$(".thumb").forEach(t => t.addEventListener("click", () => {
     $("#main-img").src = t.dataset.src;
     $$(".thumb").forEach(x => x.classList.remove("active"));
     t.classList.add("active");
   }));
-
   $("#add-btn").addEventListener("click", () => {
     addToCart(p.id, selectedSize);
     $("#add-btn").textContent = "Добавлено ✓";
     setTimeout(() => $("#add-btn").textContent = "Добавить в корзину", 1200);
   });
-
   $("#buy-btn").addEventListener("click", () => {
-    const text = [
-      "🛍 ЗАКАЗ — SUCCESSFUL CLUB", "",
-      `📦 Товар: ${p.name}`,
-      `📏 Размер: ${selectedSize}`,
-      `💰 Цена: ${fmt(p.price)}`, "",
-      "Подтвердите заказ, и я вышлю реквизиты для оплаты."
-    ].join("\n");
+    const text = ["🛍 ЗАКАЗ — SUCCESSFUL CLUB", "", `📦 Товар: ${p.name}`, `📏 Размер: ${selectedSize}`, `💰 Цена: ${fmt(p.price)}`, "", "Подтвердите заказ, и я вышлю реквизиты для оплаты."].join("\n");
     orderViaTelegram(text);
   });
 }
@@ -257,10 +222,7 @@ function renderCart() {
   if (!wrap) return;
   const cart = store.cart;
   if (!cart.length) {
-    wrap.innerHTML = `<div class="empty-cart">
-      <p>Корзина пуста</p>
-      <a href="catalog.html" class="btn btn-primary">Перейти в каталог</a>
-    </div>`;
+    wrap.innerHTML = `<div class="empty-cart"><p>Корзина пуста</p><a href="catalog.html" class="btn btn-primary">Перейти в каталог</a></div>`;
     return;
   }
   wrap.innerHTML = `
@@ -278,26 +240,17 @@ function renderCart() {
             <span>${i.qty}</span>
             <button data-plus="${idx}">+</button>
           </div>
-          <button class="remove" data-remove="${idx}" aria-label="Удалить">✕</button>
+          <button class="remove" data-remove="${idx}">✕</button>
         </div>`).join("")}
     </div>
-    <div class="cart-total">
-      <span>Итого:</span>
-      <strong>${fmt(cartTotal())}</strong>
-    </div>
+    <div class="cart-total"><span>Итого:</span><strong>${fmt(cartTotal())}</strong></div>
     <button class="btn btn-primary btn-lg" id="checkout">Оформить заказ в Telegram</button>`;
 
   $$("[data-plus]").forEach(b => b.onclick = () => changeQty(+b.dataset.plus, 1));
   $$("[data-minus]").forEach(b => b.onclick = () => changeQty(+b.dataset.minus, -1));
   $$("[data-remove]").forEach(b => b.onclick = () => removeFromCart(+b.dataset.remove));
-
   $("#checkout").addEventListener("click", () => {
-    const text = [
-      "🛍 ЗАКАЗ — SUCCESSFUL CLUB", "",
-      ...cart.map(i => `• ${i.name} (${i.size}) × ${i.qty} — ${fmt(i.price * i.qty)}`),
-      "", `💰 Итого: ${fmt(cartTotal())}`, "",
-      "Подтвердите заказ, и я вышлю реквизиты для оплаты."
-    ].join("\n");
+    const text = ["🛍 ЗАКАЗ — SUCCESSFUL CLUB", "", ...cart.map(i => `• ${i.name} (${i.size}) × ${i.qty} — ${fmt(i.price * i.qty)}`), "", `💰 Итого: ${fmt(cartTotal())}`, "", "Подтвердите заказ, и я вышлю реквизиты для оплаты."].join("\n");
     orderViaTelegram(text);
   });
 }
