@@ -15,7 +15,11 @@ function getDailyProduct() {
   if (!products.length) return null;
   const idx = getDailyDiscountId();
   const p = products[idx];
-  return { ...p, originalPrice: p.price, price: Math.round(p.price * (100 - DAILY_DISCOUNT) / 100) };
+  return {
+    ...p,
+    originalPrice: p.price,
+    price: Math.round(p.price * (100 - DAILY_DISCOUNT) / 100)
+  };
 }
 
 function isDailyProduct(id) {
