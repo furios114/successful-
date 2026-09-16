@@ -11,13 +11,13 @@
 
 <header class="header">
   <div class="container header-inner">
-    <a href="index.html" class="logo"><img src="images/logo.png" alt="Successful Club"></a>
+    <a href="index.html" class="logo"><img src="logo.png" alt="Successful Club"></a>
     <button class="burger" id="burger">☰</button>
     <nav class="nav" id="nav">
       <a href="index.html">Главная</a>
       <a href="catalog.html">Каталог</a>
-      <a href="favorites.html" class="icon-link active">Избранное <span class="badge" data-fav-count>0</span></a>
-      <a href="cart.html" class="icon-link">Корзина <span class="badge" data-cart-count>0</span></a>
+      <a href="favorites.html" class="active">Избранное <span class="badge" data-fav-count>0</span></a>
+      <a href="cart.html">Корзина <span class="badge" data-cart-count>0</span></a>
     </nav>
   </div>
 </header>
@@ -25,7 +25,7 @@
 <div class="container">
   <div class="catalog-head"><h1>ИЗБРАННОЕ</h1></div>
   <div id="fav-empty" class="empty" style="display:none">
-    Пока пусто. Добавляй товары в избранное, нажимая на <span style="color:var(--red)">♥</span>
+    Пока пусто. Нажми на ♥ на карточке товара, чтобы добавить сюда.
   </div>
   <div class="grid" id="fav-grid"></div>
 </div>
@@ -40,9 +40,8 @@
 <script src="js/products.js"></script>
 <script src="js/app.js"></script>
 <script>
-  document.getElementById("burger")?.addEventListener("click", () => {
+  document.getElementById("burger").onclick = () =>
     document.getElementById("nav").classList.toggle("open");
-  });
 </script>
 </body>
 </html>
