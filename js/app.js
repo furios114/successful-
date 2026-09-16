@@ -1,14 +1,16 @@
-/* STORE */
+/* ========== STORE ========== */
 const store = {
   get cart() { return JSON.parse(localStorage.getItem("cart")) || []; },
   set cart(v) { localStorage.setItem("cart", JSON.stringify(v)); updateBadges(); },
   get favs() { return JSON.parse(localStorage.getItem("favs")) || []; },
   set favs(v) { localStorage.setItem("favs", JSON.stringify(v)); updateBadges(); }
 };
+
 const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
 const fmt = n => n.toLocaleString("ru-RU") + " ₽";
 
+/* ========== BADGES ========== */
 function updateBadges() {
   const c = store.cart.reduce((s, i) => s + i.qty, 0);
   const f = store.favs.length;
@@ -16,23 +18,36 @@ function updateBadges() {
   $$("[data-fav-count]").forEach(el => { el.textContent = f; el.classList.toggle("show", f > 0); });
 }
 
-/* CART */
+/* ========== CART ========== */
 function addToCart(id, size, qty = 1) {
   const p = products.find(x => x.id === id);
   if (!p) return;
+  const isDaily = isDailyProduct(id);
+  const finalPrice = isDaily ? Math.round(p.price * (100 - DAILY_DISCOUNT) / 100) : p.price;
+
   const cart = store.cart;
   const ex = cart.find(i => i.id === id && i.size === size);
   if (ex) ex.qty += qty;
-  else cart.push({ id, name: p.name, price: p.price, image: p.images[0], size, qty });
+  else cart.push({
+    id,
+    name: p.name + (isDaily ? " (скидка дня)" : ""),
+    price: finalPrice,
+    originalPrice: p.price,
+    image: p.images[0],
+    size,
+    qty,
+    isDaily
+  });
   store.cart = cart;
   openDrawer();
   renderCartDrawer();
 }
+
 function removeFromCart(i) { const c = store.cart; c.splice(i, 1); store.cart = c; renderCartDrawer(); }
 function changeQty(i, d) { const c = store.cart; c[i].qty += d; if (c[i].qty <= 0) c.splice(i, 1); store.cart = c; renderCartDrawer(); }
 function cartTotal() { return store.cart.reduce((s, i) => s + i.price * i.qty, 0); }
 
-/* FAVS */
+/* ========== FAVS ========== */
 function toggleFav(id) {
   const f = store.favs;
   const i = f.indexOf(id);
@@ -42,17 +57,21 @@ function toggleFav(id) {
 }
 function isFav(id) { return store.favs.includes(id); }
 
-/* TELEGRAM */
+/* ========== TELEGRAM ========== */
 function orderViaTelegram(text) {
   navigator.clipboard?.writeText(text).catch(() => {});
   window.open(`https://t.me/${TG_USERNAME}?text=${encodeURIComponent(text)}`, "_blank");
 }
 
-/* CARD */
+/* ========== CARD ========== */
 function productCard(p) {
   const fav = isFav(p.id);
+  const isDaily = isDailyProduct(p.id);
+  const finalPrice = isDaily ? Math.round(p.price * (100 - DAILY_DISCOUNT) / 100) : p.price;
+
   return `
-    <article class="card" data-card>
+    <article class="card ${isDaily ? "daily" : ""}" data-card>
+      ${isDaily ? `<div class="daily-badge">СКИДКА ДНЯ −${DAILY_DISCOUNT}%</div>` : ""}
       <button class="fav-btn ${fav ? "active" : ""}" data-fav="${p.id}" aria-label="В избранное">
         <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-9.6-9.3C.9 8.3 2.6 5 6 5c2 0 3.4 1 4 2.2C10.6 6 12 5 14 5c3.4 0 5.1 3.3 3.6 6.7C19.5 16.3 12 21 12 21z"/></svg>
       </button>
@@ -62,13 +81,16 @@ function productCard(p) {
       <div class="card-body">
         <div class="card-cat">${p.categoryName || p.category}</div>
         <h3 class="card-title"><a href="product.html?id=${p.id}">${p.name}</a></h3>
-        <div class="card-price">${fmt(p.price)}</div>
+        <div class="card-price">
+          ${isDaily ? `<span class="old-price">${fmt(p.price)}</span>` : ""}
+          <span class="${isDaily ? "new-price" : ""}">${fmt(finalPrice)}</span>
+        </div>
       </div>
       <button class="btn btn-primary" data-quick-add="${p.id}"><span>Купить</span></button>
     </article>`;
 }
 
-/* RENDER */
+/* ========== RENDER ========== */
 function renderGrid(container, list) {
   if (!list.length) { container.innerHTML = `<p class="empty">Ничего не найдено</p>`; return; }
   container.innerHTML = list.map(productCard).join("");
@@ -96,7 +118,7 @@ function observeCards() {
   cards.forEach(c => io.observe(c));
 }
 
-/* GLOBAL CLICK */
+/* ========== GLOBAL CLICK ========== */
 document.addEventListener("click", e => {
   const favBtn = e.target.closest("[data-fav]");
   if (favBtn) {
@@ -104,6 +126,7 @@ document.addEventListener("click", e => {
     const active = toggleFav(+favBtn.dataset.fav);
     favBtn.classList.toggle("active", active);
     if (document.body.dataset.page === "favorites") renderFavorites();
+    if (document.body.dataset.page === "home") renderDailyBanner();
     return;
   }
   const quick = e.target.closest("[data-quick-add]");
@@ -116,7 +139,7 @@ document.addEventListener("click", e => {
   }
 });
 
-/* DRAWER */
+/* ========== DRAWER ========== */
 function openDrawer() {
   $("#cart-drawer")?.classList.add("open");
   $("#drawer-overlay")?.classList.add("open");
@@ -167,7 +190,37 @@ function renderCartDrawer() {
   });
 }
 
-/* CATALOG */
+/* ========== DAILY BANNER ========== */
+function renderDailyBanner() {
+  const wrap = $("#daily-banner");
+  if (!wrap) return;
+  const p = getDailyProduct();
+  if (!p) { wrap.style.display = "none"; return; }
+
+  const fav = isFav(p.id);
+  wrap.innerHTML = `
+    <div class="daily-banner">
+      <div class="daily-banner-left">
+        <div class="daily-label">🔥 СКИДКА ДНЯ</div>
+        <h2 class="daily-title">${p.name}</h2>
+        <p class="daily-desc">Только сегодня − ${DAILY_DISCOUNT}% на этот товар. Завтра будет другой.</p>
+        <div class="daily-prices">
+          <span class="old-price">${fmt(p.originalPrice)}</span>
+          <span class="new-price">${fmt(p.price)}</span>
+          <span class="discount-chip">−${DAILY_DISCOUNT}%</span>
+        </div>
+        <div class="daily-actions">
+          <a href="product.html?id=${p.id}" class="btn btn-primary"><span>Забрать со скидкой</span></a>
+          <button class="btn" data-fav="${p.id}"><span>${fav ? "♥ В избранном" : "♡ В избранное"}</span></button>
+        </div>
+      </div>
+      <a href="product.html?id=${p.id}" class="daily-banner-img">
+        <img src="${p.images[0]}" alt="${p.name}">
+      </a>
+    </div>`;
+}
+
+/* ========== CATALOG ========== */
 function initCatalog() {
   const grid = $("#catalog-grid");
   const search = $("#search");
@@ -199,18 +252,22 @@ function initCatalog() {
   apply();
 }
 
-/* PRODUCT */
+/* ========== PRODUCT PAGE ========== */
 function renderProduct() {
   const id = +new URLSearchParams(location.search).get("id");
   const p = products.find(x => x.id === id);
   const wrap = $("#product-wrap");
   if (!p) { wrap.innerHTML = "<p class='empty'>Товар не найден</p>"; return; }
   const fav = isFav(p.id);
+  const isDaily = isDailyProduct(p.id);
+  const finalPrice = isDaily ? Math.round(p.price * (100 - DAILY_DISCOUNT) / 100) : p.price;
+
   wrap.innerHTML = `
     <div class="product">
       <div class="product-gallery">
         <div class="product-main-img">
           <img id="main-img" src="${p.images[0]}" alt="${p.name}">
+          ${isDaily ? `<div class="daily-badge">СКИДКА ДНЯ −${DAILY_DISCOUNT}%</div>` : ""}
           <button class="fav-btn large ${fav ? "active" : ""}" data-fav="${p.id}">
             <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-9.6-9.3C.9 8.3 2.6 5 6 5c2 0 3.4 1 4 2.2C10.6 6 12 5 14 5c3.4 0 5.1 3.3 3.6 6.7C19.5 16.3 12 21 12 21z"/></svg>
           </button>
@@ -222,7 +279,10 @@ function renderProduct() {
       <div class="product-info">
         <div class="product-cat">${p.categoryName || p.category}</div>
         <h1>${p.name}</h1>
-        <div class="product-price">${fmt(p.price)}</div>
+        <div class="product-price">
+          ${isDaily ? `<span class="old-price">${fmt(p.price)}</span>` : ""}
+          <span class="${isDaily ? "new-price" : ""}">${fmt(finalPrice)}</span>
+        </div>
         <p class="product-desc">${p.description}</p>
         <div class="sizes">
           <span class="label">Размер</span>
@@ -234,6 +294,7 @@ function renderProduct() {
         <button class="btn btn-lg" id="add-btn"><span>В корзину</span></button>
       </div>
     </div>`;
+
   let selectedSize = p.sizes[0];
   $$(".size-btn").forEach(b => b.addEventListener("click", () => {
     $$(".size-btn").forEach(x => x.classList.remove("active"));
@@ -247,12 +308,18 @@ function renderProduct() {
   }));
   $("#add-btn").addEventListener("click", () => addToCart(p.id, selectedSize));
   $("#buy-btn").addEventListener("click", () => {
-    const text = ["🛍 ЗАКАЗ — SUCCESSFUL CLUB", "", `📦 Товар: ${p.name}`, `📏 Размер: ${selectedSize}`, `💰 Цена: ${fmt(p.price)}`, "", "Подтвердите заказ."].join("\n");
+    const text = [
+      "🛍 ЗАКАЗ — SUCCESSFUL CLUB", "",
+      `📦 Товар: ${p.name}${isDaily ? " 🔥 СКИДКА ДНЯ −10%" : ""}`,
+      `📏 Размер: ${selectedSize}`,
+      isDaily ? `💰 Цена: ${fmt(finalPrice)} (было ${fmt(p.price)})` : `💰 Цена: ${fmt(p.price)}`,
+      "", "Подтвердите заказ."
+    ].join("\n");
     orderViaTelegram(text);
   });
 }
 
-/* CURSOR */
+/* ========== CURSOR ========== */
 function initCursor() {
   if (window.matchMedia("(hover:none)").matches) return;
   const c = document.createElement("div");
@@ -263,7 +330,7 @@ function initCursor() {
   document.addEventListener("mouseout", e => { if (e.target.closest("a,button,.card,.btn,.fav-btn")) c.classList.remove("hover"); });
 }
 
-/* HEADER SCROLL */
+/* ========== HEADER SCROLL ========== */
 function initHeaderScroll() {
   const h = $(".header");
   if (!h) return;
@@ -272,21 +339,21 @@ function initHeaderScroll() {
   onScroll();
 }
 
-/* PRELOADER */
+/* ========== PRELOADER ========== */
 function initPreloader() {
   const pre = $(".preloader");
   if (!pre) return;
   window.addEventListener("load", () => setTimeout(() => pre.classList.add("hide"), 400));
 }
 
-/* BURGER */
+/* ========== BURGER ========== */
 function initBurger() {
   const b = $("#burger"), n = $("#nav");
   if (!b || !n) return;
   b.addEventListener("click", () => { b.classList.toggle("open"); n.classList.toggle("open"); });
 }
 
-/* INIT */
+/* ========== INIT ========== */
 document.addEventListener("DOMContentLoaded", () => {
   updateBadges();
   renderCartDrawer();
@@ -294,13 +361,17 @@ document.addEventListener("DOMContentLoaded", () => {
   initHeaderScroll();
   initPreloader();
   initBurger();
+
   const page = document.body.dataset.page;
   if (page === "catalog") initCatalog();
   if (page === "favorites") renderFavorites();
   if (page === "product") renderProduct();
+  if (page === "home") renderDailyBanner();
+
   $$("[data-open-cart]").forEach(el => el.addEventListener("click", e => { e.preventDefault(); openDrawer(); renderCartDrawer(); }));
   $("#drawer-close")?.addEventListener("click", closeDrawer);
   $("#drawer-overlay")?.addEventListener("click", closeDrawer);
+
   const hits = $("#hits-grid");
   if (hits) renderGrid(hits, products.slice(0, 8));
 });
