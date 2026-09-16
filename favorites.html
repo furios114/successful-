@@ -9,24 +9,35 @@
 </head>
 <body data-page="favorites">
 
+<div class="preloader">
+  <img src="logo.png" alt="">
+  <div class="preloader-bar"></div>
+</div>
+
 <header class="header">
   <div class="container header-inner">
-    <a href="index.html" class="logo"><img src="logo.png" alt="Successful Club"></a>
-    <button class="burger" id="burger">☰</button>
+    <a href="index.html" class="logo">
+      <img class="logo-img" src="logo.png" alt="Successful Club">
+      <div class="logo-text">SUCCESSFUL CLUB<small>EST. 2025</small></div>
+    </a>
+    <button class="burger" id="burger"><span></span><span></span><span></span></button>
     <nav class="nav" id="nav">
       <a href="index.html">Главная</a>
       <a href="catalog.html">Каталог</a>
       <a href="favorites.html" class="active">Избранное <span class="badge" data-fav-count>0</span></a>
-      <a href="cart.html">Корзина <span class="badge" data-cart-count>0</span></a>
+      <a href="#" data-open-cart>Корзина <span class="badge" data-cart-count>0</span></a>
     </nav>
   </div>
 </header>
 
-<div class="container">
-  <div class="catalog-head"><h1>ИЗБРАННОЕ</h1></div>
-  <div id="fav-empty" class="empty" style="display:none">
-    Пока пусто. Нажми на ♥ на карточке товара, чтобы добавить сюда.
+<div class="catalog-head">
+  <div class="container">
+    <h1><small>Твоя коллекция</small>ИЗБРАННОЕ</h1>
   </div>
+</div>
+
+<div class="container">
+  <div id="fav-empty" class="empty" style="display:none">Пока пусто · Нажми на ♥ на карточке</div>
   <div class="grid" id="fav-grid"></div>
 </div>
 
@@ -37,11 +48,17 @@
   </div>
 </footer>
 
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<aside class="cart-drawer" id="cart-drawer">
+  <div class="drawer-head">
+    <h2>Корзина</h2>
+    <button class="drawer-close" id="drawer-close">✕</button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+  <div class="drawer-foot" id="drawer-foot"></div>
+</aside>
+
 <script src="js/products.js"></script>
 <script src="js/app.js"></script>
-<script>
-  document.getElementById("burger").onclick = () =>
-    document.getElementById("nav").classList.toggle("open");
-</script>
 </body>
 </html>
