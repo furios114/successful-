@@ -1,13 +1,43 @@
-const TG_USERNAME = "Dr1lly52";
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Товар — Successful Club</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="product">
 
-const products = [
-  {
-    id: 1,
-    name: "Худи Successful Club",
-    price: 3990,
-    category: "hoodies",
-    images: ["hoodie-1.png", "hoodie-2.png"],
-    sizes: ["M", "L", "XL", "2XL"],
-    description: "Первый и неповторимый худак нового поколения. 50% хлопок, 50% полиэстер — сочетание максимально удерживает форму и позволяет забыть про катышки после стирки. Плотность 350 г/м² — комфортно осенью, весной и летними вечерами. Зимой рекомендуем носить сверху курточку, чтобы не заболеть 😊"
-  }
-];
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo"><img src="logo.png" alt="Successful Club"></a>
+    <button class="burger" id="burger">☰</button>
+    <nav class="nav" id="nav">
+      <a href="index.html">Главная</a>
+      <a href="catalog.html">Каталог</a>
+      <a href="favorites.html">Избранное <span class="badge" data-fav-count>0</span></a>
+      <a href="cart.html">Корзина <span class="badge" data-cart-count>0</span></a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  <div id="product-wrap"></div>
+</div>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div>© 2025 Successful Club</div>
+    <div>Заказы: <a href="https://t.me/Dr1lly52" target="_blank">@Dr1lly52</a></div>
+  </div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/app.js"></script>
+<script>
+  document.getElementById("burger").onclick = () =>
+    document.getElementById("nav").classList.toggle("open");
+</script>
+</body>
+</html>
