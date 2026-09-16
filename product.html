@@ -9,15 +9,23 @@
 </head>
 <body data-page="product">
 
+<div class="preloader">
+  <img src="logo.png" alt="">
+  <div class="preloader-bar"></div>
+</div>
+
 <header class="header">
   <div class="container header-inner">
-    <a href="index.html" class="logo"><img src="logo.png" alt="Successful Club"></a>
-    <button class="burger" id="burger">☰</button>
+    <a href="index.html" class="logo">
+      <img class="logo-img" src="logo.png" alt="Successful Club">
+      <div class="logo-text">SUCCESSFUL CLUB<small>EST. 2025</small></div>
+    </a>
+    <button class="burger" id="burger"><span></span><span></span><span></span></button>
     <nav class="nav" id="nav">
       <a href="index.html">Главная</a>
       <a href="catalog.html">Каталог</a>
       <a href="favorites.html">Избранное <span class="badge" data-fav-count>0</span></a>
-      <a href="cart.html">Корзина <span class="badge" data-cart-count>0</span></a>
+      <a href="#" data-open-cart>Корзина <span class="badge" data-cart-count>0</span></a>
     </nav>
   </div>
 </header>
@@ -33,11 +41,17 @@
   </div>
 </footer>
 
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<aside class="cart-drawer" id="cart-drawer">
+  <div class="drawer-head">
+    <h2>Корзина</h2>
+    <button class="drawer-close" id="drawer-close">✕</button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+  <div class="drawer-foot" id="drawer-foot"></div>
+</aside>
+
 <script src="js/products.js"></script>
 <script src="js/app.js"></script>
-<script>
-  document.getElementById("burger").onclick = () =>
-    document.getElementById("nav").classList.toggle("open");
-</script>
 </body>
 </html>
