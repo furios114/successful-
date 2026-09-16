@@ -18,14 +18,14 @@
   <div class="container header-inner">
     <a href="index.html" class="logo">
       <img class="logo-img" src="logo.png" alt="Successful Club">
-      <div class="logo-text">SUCCESSFUL CLUB<small>EST. 2025</small></div>
+      <div class="logo-text">SUCCESSFUL CLUB<small>EST. 2026</small></div>
     </a>
     <button class="burger" id="burger"><span></span><span></span><span></span></button>
     <nav class="nav" id="nav">
       <a href="index.html">Главная</a>
       <a href="catalog.html">Каталог</a>
       <a href="favorites.html">Избранное <span class="badge" data-fav-count>0</span></a>
-      <a href="cart.html" class="active">Корзина <span class="badge" data-cart-count>0</span></a>
+      <a href="#" data-open-cart class="active">Корзина <span class="badge" data-cart-count>0</span></a>
     </nav>
   </div>
 </header>
@@ -36,13 +36,18 @@
   </div>
 </div>
 
-<div class="container" style="padding-bottom:80px">
-  <div id="cart-wrap"></div>
+<div class="container" style="padding-bottom:120px">
+  <div style="text-align:center;padding:60px 20px">
+    <p style="color:var(--muted);font-size:14px;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px">
+      Корзина открывается в панели справа
+    </p>
+    <button class="btn btn-primary" data-open-cart><span>Открыть корзину</span></button>
+  </div>
 </div>
 
 <footer class="footer">
   <div class="container footer-inner">
-    <div>© 2025 Successful Club</div>
+    <div class="logo-text" style="font-size:16px">SUCCESSFUL CLUB</div>
     <div>Заказы: <a href="https://t.me/Dr1lly52" target="_blank">@Dr1lly52</a></div>
   </div>
 </footer>
