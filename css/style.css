@@ -23,7 +23,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .container{max-width:1400px;margin:0 auto;padding:0 40px}
 @media(max-width:768px){.container{padding:0 20px}}
 
-/* CURSOR */
+/* ============ CURSOR ============ */
 .cursor{
   position:fixed;width:10px;height:10px;background:#fff;border-radius:50%;
   pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
@@ -33,7 +33,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .cursor.hover{width:70px;height:70px}
 @media(hover:none){.cursor{display:none}}
 
-/* PRELOADER */
+/* ============ PRELOADER ============ */
 .preloader{
   position:fixed;inset:0;background:#000;z-index:10000;
   display:flex;align-items:center;justify-content:center;
@@ -50,7 +50,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 @keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
 @keyframes load{0%{left:-40%}100%{left:100%}}
 
-/* HEADER */
+/* ============ HEADER ============ */
 .header{
   position:fixed;top:0;left:0;right:0;z-index:100;padding:24px 0;
   background:rgba(0,0,0,.7);
@@ -61,7 +61,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 }
 .header.scrolled{padding:16px 0;border-bottom-color:var(--line);background:rgba(0,0,0,.9)}
 .header-inner{display:flex;align-items:center;gap:48px}
-
 .logo{display:flex;align-items:center;gap:14px}
 .logo-img{width:38px;height:38px;object-fit:contain;transition:transform .4s var(--ease)}
 .logo:hover .logo-img{transform:rotate(-10deg) scale(1.1)}
@@ -70,7 +69,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   display:flex;flex-direction:column;gap:3px;
 }
 .logo-text small{font-family:'Inter',sans-serif;font-size:8px;letter-spacing:4px;color:var(--muted);font-weight:500}
-
 .nav{display:flex;gap:4px;margin-left:auto;align-items:center}
 .nav a{
   font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;
@@ -84,7 +82,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   transition:transform .4s var(--ease);
 }
 .nav a:hover::after,.nav a.active::after{transform:scaleX(1)}
-
 .badge{
   display:inline-flex;align-items:center;justify-content:center;
   min-width:16px;height:16px;padding:0 4px;background:var(--red);color:#fff;
@@ -92,7 +89,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   transform:scale(0);transition:transform .3s var(--ease);
 }
 .badge.show{transform:scale(1)}
-
 .burger{
   display:none;width:40px;height:40px;
   flex-direction:column;justify-content:center;align-items:center;gap:5px;
@@ -102,7 +98,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .burger.open span:nth-child(2){opacity:0}
 .burger.open span:nth-child(3){transform:rotate(-45deg) translate(3px,-3px)}
 
-/* HERO */
+/* ============ HERO ============ */
 .hero{
   min-height:100vh;display:flex;align-items:center;justify-content:center;
   text-align:center;position:relative;padding:120px 20px 80px;
@@ -128,7 +124,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 }
 .hero .btn{opacity:0;animation:fadeUp 1s var(--ease) 1.2s forwards}
 @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
-
 .hero-scroll{
   position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
   font-size:10px;letter-spacing:3px;color:var(--muted);
@@ -144,7 +139,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   50%{transform:scaleY(1);transform-origin:top}
 }
 
-/* BUTTONS */
+/* ============ BUTTONS ============ */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;
   padding:16px 40px;background:transparent;color:#fff;
@@ -168,7 +163,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .btn-lg{padding:20px 56px;font-size:13px;width:100%;max-width:380px}
 .btn-lg + .btn-lg{margin-top:14px}
 
-/* SECTION */
+/* ============ SECTION ============ */
 .section{padding:120px 0}
 .section-head{
   display:flex;justify-content:space-between;align-items:end;
@@ -184,7 +179,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   margin-bottom:8px;font-weight:600;
 }
 
-/* GRID */
+/* ============ GRID ============ */
 .grid{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
   gap:2px;background:var(--line);
@@ -192,7 +187,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 }
 @media(max-width:768px){.grid{grid-template-columns:repeat(2,1fr)}}
 
-/* CARD */
+/* ============ CARD ============ */
 .card{
   background:var(--bg);position:relative;overflow:hidden;
   opacity:0;transform:translateY(40px);
@@ -220,7 +215,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 }
 .card:hover .btn{transform:translateY(0);opacity:1}
 
-/* FAV */
+/* ============ FAV ============ */
 .fav-btn{
   position:absolute;top:20px;right:20px;z-index:3;
   width:40px;height:40px;display:flex;align-items:center;justify-content:center;
@@ -235,7 +230,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .fav-btn.large{width:52px;height:52px;top:24px;right:24px}
 .fav-btn.large svg{width:22px;height:22px}
 
-/* CATALOG */
+/* ============ CATALOG ============ */
 .catalog-head{padding:180px 0 60px}
 .catalog-head h1{
   font-family:'Bebas Neue',sans-serif;
@@ -283,7 +278,7 @@ select#sort{
 select#sort option{background:#000;color:#fff}
 .result-info{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:2px;margin-bottom:32px}
 
-/* PRODUCT */
+/* ============ PRODUCT ============ */
 .product{display:grid;grid-template-columns:1.2fr 1fr;gap:80px;padding:160px 0 80px}
 .product-gallery{position:sticky;top:120px;align-self:start}
 .product-main-img{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--card)}
@@ -317,7 +312,7 @@ select#sort option{background:#000;color:#fff}
 .size-btn.active{background:#fff;color:#000;border-color:#fff}
 .product-info .btn-lg{max-width:100%}
 
-/* DRAWER */
+/* ============ DRAWER ============ */
 .cart-drawer{
   position:fixed;top:0;right:0;bottom:0;width:min(480px,100%);
   background:#000;border-left:1px solid var(--line);z-index:200;
@@ -341,7 +336,7 @@ select#sort option{background:#000;color:#fff}
 }
 .drawer-overlay.open{opacity:1;visibility:visible}
 
-/* CART ITEM */
+/* ============ CART ITEM ============ */
 .cart-item{
   display:grid;grid-template-columns:80px 1fr auto;gap:16px;
   padding:20px 0;border-bottom:1px solid var(--line);align-items:start;
@@ -366,7 +361,7 @@ select#sort option{background:#000;color:#fff}
 .empty-cart p{color:var(--muted);font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px}
 .empty{color:var(--muted);text-align:center;padding:120px 0;font-size:13px;letter-spacing:2px;text-transform:uppercase}
 
-/* FOOTER */
+/* ============ FOOTER ============ */
 .footer{border-top:1px solid var(--line);padding:80px 0 40px;margin-top:120px}
 .footer-inner{
   display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;
@@ -374,13 +369,107 @@ select#sort option{background:#000;color:#fff}
 }
 .footer a:hover{color:var(--red)}
 
-/* SCROLLBAR */
+/* ============ SCROLLBAR ============ */
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:#000}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15)}
 ::-webkit-scrollbar-thumb:hover{background:var(--red)}
 
-/* MOBILE */
+/* ============ DAILY BANNER ============ */
+.daily-banner{
+  display:grid;
+  grid-template-columns:1.2fr 1fr;
+  gap:0;
+  border:1px solid var(--line);
+  background:linear-gradient(135deg,#0a0000 0%,#000 60%);
+  position:relative;
+  overflow:hidden;
+}
+.daily-banner::before{
+  content:"";
+  position:absolute;
+  top:-50%;right:-10%;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(224,30,45,.25),transparent 60%);
+  pointer-events:none;
+}
+.daily-banner-left{
+  padding:60px;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;z-index:1;
+}
+.daily-label{
+  display:inline-block;
+  font-size:11px;letter-spacing:4px;font-weight:700;
+  color:var(--red);text-transform:uppercase;
+  margin-bottom:20px;
+  padding:8px 16px;
+  border:1px solid var(--red);
+  align-self:flex-start;
+  animation:pulseRed 2s ease-in-out infinite;
+}
+@keyframes pulseRed{
+  0%,100%{box-shadow:0 0 0 0 rgba(224,30,45,.4)}
+  50%{box-shadow:0 0 0 12px rgba(224,30,45,0)}
+}
+.daily-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(36px,5vw,64px);
+  line-height:1;letter-spacing:2px;
+  margin-bottom:16px;
+}
+.daily-desc{
+  color:var(--muted);font-size:14px;line-height:1.8;
+  margin-bottom:28px;max-width:420px;
+}
+.daily-prices{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:32px;flex-wrap:wrap;
+}
+.daily-prices .old-price{font-size:20px}
+.daily-prices .new-price{font-size:38px;color:var(--red)}
+.discount-chip{
+  padding:6px 12px;
+  background:var(--red);color:#fff;
+  font-size:12px;font-weight:700;letter-spacing:1px;
+}
+.daily-actions{display:flex;gap:12px;flex-wrap:wrap}
+.daily-actions .btn{flex:0 0 auto}
+.daily-banner-img{
+  display:block;
+  position:relative;
+  overflow:hidden;
+  min-height:400px;
+}
+.daily-banner-img img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform 1s var(--ease);
+}
+.daily-banner:hover .daily-banner-img img{transform:scale(1.05)}
+
+/* ============ PRICE STYLES ============ */
+.old-price{
+  text-decoration:line-through;
+  color:var(--muted);
+  font-size:0.65em;
+  margin-right:10px;
+  font-weight:400;
+}
+.new-price{color:var(--red)}
+
+/* ============ DAILY CARD BADGE ============ */
+.card.daily{border:1px solid rgba(224,30,45,.3)}
+.daily-badge{
+  position:absolute;top:20px;left:20px;z-index:3;
+  padding:8px 14px;
+  background:var(--red);color:#fff;
+  font-size:10px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;
+  animation:pulseRed 2s ease-in-out infinite;
+}
+.product-main-img .daily-badge{top:24px;left:24px}
+
+/* ============ MOBILE ============ */
 @media(max-width:900px){
   .nav{display:none}
   .nav.open{
@@ -404,4 +493,8 @@ select#sort option{background:#000;color:#fff}
   .card-title{font-size:18px}
   .card-price{font-size:14px}
   .card .btn{width:calc(100% - 32px);margin:0 16px 16px}
+  .daily-banner{grid-template-columns:1fr}
+  .daily-banner-img{min-height:300px;order:-1}
+  .daily-banner-left{padding:32px 24px}
 }
+  
