@@ -9,32 +9,42 @@
 </head>
 <body data-page="home">
 
+<div class="preloader">
+  <img src="logo.png" alt="">
+  <div class="preloader-bar"></div>
+</div>
+
 <header class="header">
   <div class="container header-inner">
-    <a href="index.html" class="logo"><img src="logo.png" alt="Successful Club"></a>
-    <button class="burger" id="burger">☰</button>
+    <a href="index.html" class="logo">
+      <img class="logo-img" src="logo.png" alt="Successful Club">
+      <div class="logo-text">SUCCESSFUL CLUB<small>EST. 2025</small></div>
+    </a>
+    <button class="burger" id="burger"><span></span><span></span><span></span></button>
     <nav class="nav" id="nav">
       <a href="index.html" class="active">Главная</a>
       <a href="catalog.html">Каталог</a>
       <a href="favorites.html">Избранное <span class="badge" data-fav-count>0</span></a>
-      <a href="cart.html">Корзина <span class="badge" data-cart-count>0</span></a>
+      <a href="#" data-open-cart>Корзина <span class="badge" data-cart-count>0</span></a>
     </nav>
   </div>
 </header>
 
 <section class="hero">
   <div class="container">
-    <h1>SUCCESSFUL <span>CLUB</span></h1>
-    <p>Одежда нового поколения. Для тех, кто идёт до конца.</p>
-    <a href="catalog.html" class="btn btn-primary btn-lg" style="max-width:300px;margin:0 auto">Смотреть каталог</a>
+    <img class="hero-logo" src="logo.png" alt="Successful Club">
+    <h1><span>SUCCESSFUL</span><br><span class="accent">CLUB</span></h1>
+    <p>Одежда нового поколения · EST. 2025</p>
+    <a href="catalog.html" class="btn btn-primary btn-lg"><span>Смотреть каталог</span></a>
   </div>
+  <div class="hero-scroll">SCROLL</div>
 </section>
 
 <section class="section">
   <div class="container">
     <div class="section-head">
-      <h2 class="section-title">Хиты</h2>
-      <a href="catalog.html" class="btn">Все товары →</a>
+      <h2 class="section-title"><small>Коллекция</small>Хиты</h2>
+      <a href="catalog.html" class="btn"><span>Все товары</span></a>
     </div>
     <div class="grid" id="hits-grid"></div>
   </div>
@@ -47,14 +57,17 @@
   </div>
 </footer>
 
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<aside class="cart-drawer" id="cart-drawer">
+  <div class="drawer-head">
+    <h2>Корзина</h2>
+    <button class="drawer-close" id="drawer-close">✕</button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+  <div class="drawer-foot" id="drawer-foot"></div>
+</aside>
+
 <script src="js/products.js"></script>
 <script src="js/app.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    renderGrid(document.getElementById("hits-grid"), products.slice(0, 4));
-    document.getElementById("burger").onclick = () =>
-      document.getElementById("nav").classList.toggle("open");
-  });
-</script>
 </body>
 </html>
