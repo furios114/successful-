@@ -27,17 +27,23 @@ function addToCart(id, size, qty = 1) {
 
   const cart = store.cart;
   const ex = cart.find(i => i.id === id && i.size === size);
-  if (ex) ex.qty += qty;
-  else cart.push({
-    id,
-    name: p.name + (isDaily ? " (скидка дня)" : ""),
-    price: finalPrice,
-    originalPrice: p.price,
-    image: p.images[0],
-    size,
-    qty,
-    isDaily
-  });
+  if (ex) {
+    ex.qty += qty;
+    ex.price = finalPrice;
+    ex.isDaily = isDaily;
+    ex.name = p.name + (isDaily ? " (скидка дня)" : "");
+  } else {
+    cart.push({
+      id,
+      name: p.name + (isDaily ? " (скидка дня)" : ""),
+      price: finalPrice,
+      originalPrice: p.price,
+      image: p.images[0],
+      size,
+      qty,
+      isDaily
+    });
+  }
   store.cart = cart;
   openDrawer();
   renderCartDrawer();
@@ -196,7 +202,6 @@ function renderDailyBanner() {
   if (!wrap) return;
   const p = getDailyProduct();
   if (!p) { wrap.style.display = "none"; return; }
-
   const fav = isFav(p.id);
   wrap.innerHTML = `
     <div class="daily-banner">
@@ -271,9 +276,18 @@ function renderProduct() {
           <button class="fav-btn large ${fav ? "active" : ""}" data-fav="${p.id}">
             <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-9.6-9.3C.9 8.3 2.6 5 6 5c2 0 3.4 1 4 2.2C10.6 6 12 5 14 5c3.4 0 5.1 3.3 3.6 6.7C19.5 16.3 12 21 12 21z"/></svg>
           </button>
+          ${p.images.length > 1 ? `
+            <button class="gallery-arrow prev" id="img-prev" aria-label="Назад">
+              <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="gallery-arrow next" id="img-next" aria-label="Вперёд">
+              <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="gallery-counter"><span id="img-current">1</span> / ${p.images.length}</div>
+          ` : ""}
         </div>
         <div class="thumbs">
-          ${p.images.map((img, i) => `<img src="${img}" class="thumb ${i===0?'active':''}" data-src="${img}">`).join("")}
+          ${p.images.map((img, i) => `<img src="${img}" class="thumb ${i===0?'active':''}" data-idx="${i}">`).join("")}
         </div>
       </div>
       <div class="product-info">
@@ -295,16 +309,33 @@ function renderProduct() {
       </div>
     </div>`;
 
+  let currentIdx = 0;
+  const mainImg = $("#main-img");
+  const counter = $("#img-current");
+
+  function setImage(idx) {
+    currentIdx = (idx + p.images.length) % p.images.length;
+    mainImg.src = p.images[currentIdx];
+    if (counter) counter.textContent = currentIdx + 1;
+    $$(".thumb").forEach((t, i) => t.classList.toggle("active", i === currentIdx));
+  }
+
+  $("#img-prev")?.addEventListener("click", () => setImage(currentIdx - 1));
+  $("#img-next")?.addEventListener("click", () => setImage(currentIdx + 1));
+  $$(".thumb").forEach(t => t.addEventListener("click", () => setImage(+t.dataset.idx)));
+
+  let touchStartX = 0;
+  mainImg?.addEventListener("touchstart", e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  mainImg?.addEventListener("touchend", e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) setImage(diff > 0 ? currentIdx + 1 : currentIdx - 1);
+  });
+
   let selectedSize = p.sizes[0];
   $$(".size-btn").forEach(b => b.addEventListener("click", () => {
     $$(".size-btn").forEach(x => x.classList.remove("active"));
     b.classList.add("active");
     selectedSize = b.dataset.size;
-  }));
-  $$(".thumb").forEach(t => t.addEventListener("click", () => {
-    $("#main-img").src = t.dataset.src;
-    $$(".thumb").forEach(x => x.classList.remove("active"));
-    t.classList.add("active");
   }));
   $("#add-btn").addEventListener("click", () => addToCart(p.id, selectedSize));
   $("#buy-btn").addEventListener("click", () => {
@@ -326,8 +357,8 @@ function initCursor() {
   c.className = "cursor";
   document.body.appendChild(c);
   document.addEventListener("mousemove", e => { c.style.left = e.clientX + "px"; c.style.top = e.clientY + "px"; });
-  document.addEventListener("mouseover", e => { if (e.target.closest("a,button,.card,.btn,.fav-btn")) c.classList.add("hover"); });
-  document.addEventListener("mouseout", e => { if (e.target.closest("a,button,.card,.btn,.fav-btn")) c.classList.remove("hover"); });
+  document.addEventListener("mouseover", e => { if (e.target.closest("a,button,.card,.btn,.fav-btn,.gallery-arrow")) c.classList.add("hover"); });
+  document.addEventListener("mouseout", e => { if (e.target.closest("a,button,.card,.btn,.fav-btn,.gallery-arrow")) c.classList.remove("hover"); });
 }
 
 /* ========== HEADER SCROLL ========== */
